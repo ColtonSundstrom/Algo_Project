@@ -6,19 +6,19 @@
 #include <stdio.h>
 using namespace std;
 
+string s1, s2;
+
 bool isNumber( string token )
 {
     return regex_match( token, regex( ( "((\\+|-)?[[:digit:]]+)(\\.(([[:digit:]]+)?))?" ) ) );
 }
 
-int main (int argc, char **argv) {
-
+bool generate_strings (char **argv) {
   fstream input_file (argv[1], fstream::out | fstream::in);
 
   string line;
 
   if (input_file.is_open()) {
-    string s1, s2;
     int count1=0, count2=0;
     int l_org1,l_org2;
 
@@ -48,12 +48,21 @@ int main (int argc, char **argv) {
     input_file.close();
 
     if (!(pow(2,--count1)*l_org1 == s1.length()) || !(pow(2,--count2)*l_org2 == s2.length())) {
-      exit(0);
+      return false;
     } else {
       cout << "String validations successful!" << endl;
+      return true;
     }
   }
   else {
       cout << "Could not open file!";
+      return false;
+  }
+}
+
+int main (int argc, char **argv) {
+
+  if (!generate_strings(argv)) {
+    exit(0);
   }
 }
