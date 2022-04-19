@@ -31,6 +31,7 @@ int main (int argc, char **argv) {
       else if (count1>0 && count2==0) {
         if (isNumber(line)) {
             s1 = s1.insert(stoi(line), s1);
+            count1++;
         }
         else {
           s2 = line;
@@ -40,15 +41,16 @@ int main (int argc, char **argv) {
       }
       else {
         s2 = s2.insert(stoi(line), s2);
+        count2++;
       }
     }
 
     input_file.close();
 
-    cout << pow(2,--count1)*l_org1 << endl;
-
-    if (!pow(2,--count1)*l_org1 == s1.length() || !pow(2,--count2)*l_org2 == s2.length()) {
+    if (!(pow(2,--count1)*l_org1 == s1.length()) || !(pow(2,--count2)*l_org2 == s2.length())) {
       exit(0);
+    } else {
+      cout << "String validations successful!" << endl;
     }
   }
   else {
