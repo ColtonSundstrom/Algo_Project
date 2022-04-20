@@ -1,10 +1,10 @@
 #!/bin/bash
-echo "Enter the programme name: "
+echo "Enter the programme name (or leave blank for default): "
 read prog_Name
 if [ -z "${prog_Name}" ]; then
   prog_Name="basic.cpp"
 fi
-echo "Enter the maximum number of input files: "
+echo "Enter the maximum number of input files (or leave blank for default): "
 read max
 if [ -z "${max}" ]; then
   max=5
