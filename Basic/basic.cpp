@@ -127,7 +127,7 @@ int calculate_cost () {
   // Recurrence relation
   for (int i=1; i<=lengths[0]; i++) {
     for (int j=1; j<=lengths[1]; j++) {
-      if (s[0].at(i-1) == s[1].at(i-1)) {
+      if (s[0].at(i-1) == s[1].at(j-1)) {
         dp[i][j] = dp[i-1][j-1];
       }
       else {
