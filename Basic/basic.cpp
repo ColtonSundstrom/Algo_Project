@@ -31,6 +31,18 @@ const int penalty[4][4] = {
 // Stores the gap penalty
 const int penalty_blank = 30;
 
+// Source: CSCI570_Spring_FinalProject.pdf
+long getTotalMemory() {
+  struct rusage usage;
+  int returnCode = getrusage(RUSAGE_SELF, &usage);
+  if(returnCode == 0) {
+    return usage.ru_maxrss;
+  } else {
+    printf("error %d", errno);
+    return -1; 
+  }
+}
+
 // Checks if a string is a numerical value
 bool isNumber (string token)
 {
