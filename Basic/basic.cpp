@@ -6,6 +6,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <sys/resource.h>
+#include "sys/time.h"
 #include <algorithm>
 using namespace std;
 
