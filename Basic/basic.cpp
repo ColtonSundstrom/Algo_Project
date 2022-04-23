@@ -205,15 +205,26 @@ void generate_solution () {
 }
 
 // Print the completed statistics to the output file
-bool print_stats(char **argv) {
+bool print_stats(char **argv, struct timeval* begin) {
   // Open file
   fstream output_file (argv[2], fstream::out);
+
+  double totalmemory = getTotalMemory();
+
+  struct timeval end;
+  gettimeofday(&end, 0);
+  long seconds = end.tv_sec - begin->tv_sec;
+  long microseconds = end.tv_usec - begin->tv_usec;
+  double totaltime = seconds*1000 + microseconds*1e-3;
 
   if (output_file.is_open()) {
     output_file << calculate_cost() << endl;
     generate_solution();
     output_file << sols[0] << endl;
     output_file << sols[1] << endl;
+
+    output_file << totaltime << endl;
+    output_file << totalmemory << endl;
 
     output_file.close();
     return true;
@@ -226,15 +237,21 @@ bool print_stats(char **argv) {
 
 int main (int argc, char **argv) {
 
+  struct timeval* begin = new struct timeval;
+  gettimeofday(begin, 0);
+
   if (!generate_strings(argv)) {
     cout << "Could not generate strings!" << endl;
+    delete begin;
     exit(0);
   }
-  else if (!print_stats(argv)) {
+  else if (!print_stats(argv, begin)) {
     cout << "Could not process strings!" << endl;
+    delete begin;
     exit(0);
   }
   else {
+    delete begin;
     cout << "Instance completed successfully!" << endl;
   }
 }
