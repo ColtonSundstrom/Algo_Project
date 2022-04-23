@@ -9,6 +9,8 @@
 #include <algorithm>
 using namespace std;
 
+extern int errno;
+
 // Stores generated strings
 string s[2];
 // Dynamic Programming table
