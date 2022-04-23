@@ -1,9 +1,11 @@
 #include <iostream>
+#include <errno.h>
 #include <fstream>
 #include <string>
 #include <regex>
 #include <math.h>
 #include <stdio.h>
+#include <sys/resource.h>
 #include <algorithm>
 using namespace std;
 
