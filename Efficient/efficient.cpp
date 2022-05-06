@@ -141,12 +141,15 @@ vector<int> efficient_align (const string& s0, const string& s1) {
     }
 
     for (int i=1; i<=s0.size(); i++) {
+        cout << "Start " << i << endl;
         dp[1][0] = i*penalty_blank;
         for (int j=1; j<=s1.size(); j++) {
             cout << "(" << i << "," << j << ")" << endl;
             dp[1][j] = min({(dp[0][j-1]+penalty[(int)(s0.at(i-1)-48)][(int)(s1.at(j-1)-48)]),(dp[0][j]+penalty_blank),(dp[1][j-1]+penalty_blank)});
+            cout << dp[1][j] << endl;
         }
         dp[0] = dp[1];
+        cout << "Done " << i << endl;
     }
     return dp[1];
 }
