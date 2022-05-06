@@ -126,7 +126,7 @@ vector<pair<char,char>> base_case (const string& s0,const string& s1) {
             result.push_back({'_',s1.at(j-- -1)});
         else if (i>0 && (dp[i][j] == dp[i-1][j] + penalty_blank))
             result.push_back({s0.at(i-- - 1),'_'});
-        else if (i>0 && j>0 && (dp[i][j] = dp[i-1][j-1]+penalty[(int)(s0.at(i-1)-48)][(int)(s1.at(j-1)-48)]))
+        else
             result.push_back({s0.at(i-- - 1),s1.at(j-- - 1)});
     }
 
@@ -141,16 +141,13 @@ vector<int> efficient_align (const string& s0, const string& s1) {
     }
 
     for (int i=1; i<=s0.size(); i++) {
-        cout << "Start " << i << endl;
         dp[1][0] = i*penalty_blank;
         for (int j=1; j<=s1.size(); j++) {
-            cout << "(" << i << "," << j << ")" << endl;
             dp[1][j] = min({(dp[0][j-1]+penalty[(int)(s0.at(i-1)-48)][(int)(s1.at(j-1)-48)]),(dp[0][j]+penalty_blank),(dp[1][j-1]+penalty_blank)});
-            cout << dp[1][j] << endl;
         }
         dp[0] = dp[1];
-        cout << "Done " << i << endl;
     }
+
     return dp[1];
 }
 
@@ -184,22 +181,44 @@ vector<pair<char,char>> divide_and_conquer (int &cut_cost,const string& s0 = s[0
     return result;
 }
 
-int main (int argc, char **argv) {
+// Print the completed statistics to the output file
+bool print_stats(char **argv) {
+  // Open file
+  fstream output_file (argv[2], fstream::out);
 
-    if (!generate_strings(argv)) {
-    cout << "Could not generate strings!" << endl;
-    exit(0);
-    }
-
+  if (output_file.is_open()) {
     int optimal_cost = 0;
     encode_string(s);
     vector<pair<char,char>> result = divide_and_conquer(optimal_cost,s[0],s[1]);
-    cout << optimal_cost << endl;
-
     for (auto i: result) {
         sols[0] += i.first;
         sols[1] += i.second;
     }
     decode_string(sols);
-    cout << sols[0] << endl << sols[1] << endl;
+    output_file << optimal_cost << endl;
+    output_file << sols[0] << endl;
+    output_file << sols[1] << endl;
+
+    output_file.close();
+    return true;
+  }
+  else {
+      cout << "Could not create/open file!";
+      return false;
+  }
+}
+
+int main (int argc, char **argv) {
+
+    if (!generate_strings(argv)) {
+        cout << "Could not generate strings!" << endl;
+        exit(0);
+    }
+    else if (!print_stats(argv)) {
+        cout << "Could not process strings!" << endl;
+        exit(0);
+    }
+    else {
+        cout << "Instance completed successfully!" << endl;
+    }
 }
