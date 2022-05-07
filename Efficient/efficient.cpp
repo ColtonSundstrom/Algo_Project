@@ -171,7 +171,7 @@ vector<pair<char,char>> divide_and_conquer (int &cut_cost,const string& s0 = s[0
     // Conquer the parts after optimal cut
     vector<pair<char,char>> result_left  = divide_and_conquer(temp,s0.substr(0,s0.size()/2),s1.substr(0,optimal_length));
     vector<pair<char,char>> result_right = divide_and_conquer(temp,s0_right_half,s1.substr(optimal_length,s1.size()-optimal_length));
-    
+
     // Combine
     vector<pair<char,char>> result;
     result.resize(result_left.size()+result_right.size());
@@ -195,6 +195,11 @@ bool print_stats(char **argv) {
         sols[1] += i.second;
     }
     decode_string(sols);
+
+    //We get the strings in reverse here, so we reverse to get aligned solutions
+    for (int i=0; i<2; i++)
+      sols[i] = string(sols[i].rbegin(), sols[i].rend());
+    
     output_file << optimal_cost << endl;
     output_file << sols[0] << endl;
     output_file << sols[1] << endl;
@@ -219,6 +224,6 @@ int main (int argc, char **argv) {
         exit(0);
     }
     else {
-        cout << "Instance completed successfully!" << endl;
+        //cout << "Instance completed successfully!" << endl;
     }
 }

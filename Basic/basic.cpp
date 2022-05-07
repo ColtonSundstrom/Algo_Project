@@ -40,7 +40,7 @@ long getTotalMemory() {
     return usage.ru_maxrss;
   } else {
     printf("error %d", errno);
-    return -1; 
+    return -1;
   }
 }
 
@@ -253,6 +253,6 @@ int main (int argc, char **argv) {
   }
   else {
     delete begin;
-    cout << "Instance completed successfully!" << endl;
+    //cout << "Instance completed successfully!" << endl;
   }
 }

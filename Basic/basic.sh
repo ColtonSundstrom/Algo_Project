@@ -1,28 +1,13 @@
 #!/bin/bash
-echo "Enter the programme name (or leave blank for default): "
-read prog_Name
-if [ -z "${prog_Name}" ]; then
-  prog_Name="basic.cpp"
-fi
-echo "Enter the maximum number of input files (or leave blank for default): "
-read max
-if [ -z "${max}" ]; then
-  max=5
-fi
-echo "Enter the input directory path relative to the current folder (exclude end slashes, and leave blank for default path): "
-read input_Path
-if [ -z "${input_Path}" ]; then
-  input_Path="../Project/SampleTestCases"
-fi
-echo "Enter the output directory path relative to the current folder (exclude end slashes, and leave blank for default path): "
-read output_Path
-if [ -z "${output_Path}" ]; then
-  output_Path="output"
-fi
+prog_Name="basic.cpp"
+max=5
+input_Path="../Project/SampleTestCases"
+output_Path="output"
+
 g++ -Werror $prog_Name
 if [[ $? == 0 ]]; then
   if ls | grep "${output_Path}"; then
-    echo "Output folder with path \'${output_Path}\' already exists, replacing!"
+    #echo "Output folder with path \'${output_Path}\' already exists, replacing!"
     rm -r "${output_Path}"
   fi
   mkdir "${output_Path}"
