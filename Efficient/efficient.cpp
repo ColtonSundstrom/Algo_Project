@@ -104,14 +104,17 @@ void decode_string (string *s) {
   }
 }
 
+// Just a rewritten version of the basic.cpp function, but only handles base cases where one of the strings has length <=2
 vector<pair<char,char>> base_case (const string& s0,const string& s1) {
     vector<vector<int>> dp (s0.size()+1, vector<int>(s1.size()+1, INT32_MAX));
 
+    // Initialize the table with base cases
     for (int i=0; i<=s0.size(); i++)
         dp[i][0] = i*penalty_blank;
     for (int i=1; i<=s1.size(); i++)
         dp[0][i] = i*penalty_blank;
 
+    // Populate the table
     for (int i=1; i<=s0.size(); i++) {
         for (int j=1; j<=s1.size(); j++) {
             dp[i][j] = min({(dp[i-1][j-1]+penalty[(int)(s0.at(i-1)-48)][(int)(s1.at(j-1)-48)]), (dp[i-1][j]+penalty_blank), (dp[i][j-1]+penalty_blank)});
@@ -121,6 +124,7 @@ vector<pair<char,char>> base_case (const string& s0,const string& s1) {
     int i=s0.size(), j=s1.size();
     vector<pair<char,char>> result;
 
+    // Reconstruct the solutions
     while (i>0 || j>0) {
         if (j>0 && (dp[i][j] == dp[i][j-1] + penalty_blank))
             result.push_back({'_',s1.at(j-- -1)});
@@ -130,16 +134,21 @@ vector<pair<char,char>> base_case (const string& s0,const string& s1) {
             result.push_back({s0.at(i-- - 1),s1.at(j-- - 1)});
     }
 
+    // Return the result as aligned vector pairs
     return result;
 }
 
+// This is to calculate partial costs which help determine the optimal cut for DnC
 vector<int> efficient_align (const string& s0, const string& s1) {
+    // Linear table (well, twice linear but still O(n))
     vector<vector<int>> dp(2, vector<int>(s1.size()+1, INT32_MAX));
 
+    // Initialize with base cases
     for (int i=0; i<=s1.size(); i++) {
         dp[0][i] = i*penalty_blank;
     }
 
+    // Compute partial costs
     for (int i=1; i<=s0.size(); i++) {
         dp[1][0] = i*penalty_blank;
         for (int j=1; j<=s1.size(); j++) {
@@ -148,10 +157,14 @@ vector<int> efficient_align (const string& s0, const string& s1) {
         dp[0] = dp[1];
     }
 
+    // Return the calculated partial costs
     return dp[1];
 }
 
+// Divide and conquer based on optimal cuts
 vector<pair<char,char>> divide_and_conquer (int &cut_cost,const string& s0 = s[0],const string& s1 = s[1]) {
+
+    // This is the base case, to be solved by dynamic programming (aka original method)
     if (s0.size()<=2 || s1.size()<=2)
         return base_case(s0, s1);
 
@@ -161,6 +174,7 @@ vector<pair<char,char>> divide_and_conquer (int &cut_cost,const string& s0 = s[0
     vector<int> right_half_cost = efficient_align(string(s0_right_half.rbegin(),s0_right_half.rend()),string(s1.rbegin(),s1.rend()));
     vector<int> cost(left_half_cost.size(), 0);
 
+    // Create the cost array to find min cost cut using the left and right half costs
     for (int i=0; i<left_half_cost.size(); i++)
         cost[i] = left_half_cost[i] + right_half_cost[right_half_cost.size()-1-i];
 
@@ -178,6 +192,7 @@ vector<pair<char,char>> divide_and_conquer (int &cut_cost,const string& s0 = s[0
     move(result_right.begin(),result_right.end(),result.begin());
     move(result_left.begin(),result_left.end(),result.begin()+result_right.size());
 
+    // This will return the aligned strings in reverse, which is handled in method:print_stats()
     return result;
 }
 
@@ -186,6 +201,7 @@ bool print_stats(char **argv) {
   // Open file
   fstream output_file (argv[2], fstream::out);
 
+  // Call the functions to calculate optimal cost using divide and conquer
   if (output_file.is_open()) {
     int optimal_cost = 0;
     encode_string(s);
@@ -199,7 +215,7 @@ bool print_stats(char **argv) {
     //We get the strings in reverse here, so we reverse to get aligned solutions
     for (int i=0; i<2; i++)
       sols[i] = string(sols[i].rbegin(), sols[i].rend());
-    
+
     output_file << optimal_cost << endl;
     output_file << sols[0] << endl;
     output_file << sols[1] << endl;
